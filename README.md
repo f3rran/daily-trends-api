@@ -1,66 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Proyecto daily-trends-api
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este es un proyecto con el que scrapear las últimas 5 noticias de los portales de noticias y servirlas en una API
 
-## About Laravel
+## Requisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Antes de comenzar, asegúrate de tener instaladas las siguientes herramientas:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **PHP 8.2+** (Se recomienda la versión más reciente de PHP).
+- **Composer**
+- **MongoDB**
+- **Git**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Instalación
 
-## Learning Laravel
+Sigue estos pasos para inicializar el proyecto en tu máquina local:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Clonar el repositorio
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Clona el repositorio usando Git. Abre tu terminal y ejecuta:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone https://github.com/f3rran/daily-trends-api.git
+```
 
-## Laravel Sponsors
+### 2. Instalar las dependencias
+Entra al directorio del proyecto e instala las librerías de PHP:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+cd daily-trends-api
+composer install
+```
 
-### Premium Partners
+### 3. Copiar el .env
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+cp .env.example .env
+```
 
-## Contributing
+### 4. Configurar las credenciales de la BBDD
+En este caso mongodb:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+MONGODB_URI="mongodb://localhost:27017"
+MONGODB_DATABASE="daily-trends-api"
+```
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+### 5. Generar la key de la aplicación
+Laravel requiere una key para trabajar en base de datos y todas las tareas de hashing:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan key:generate
+```
 
-## License
+### 6. Migrar la base de datos
+Ejecuta las migraciones para inicializar la BBDD:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan migrate
+```
+
+### 7. Ejecutar MongoDB en modo réplica
+
+Para que funcionen los tests, que emplean transacciones es necesario ejecutar MongoDB en modo réplica: https://dev.to/sarwarasik/mongodb-transactions-error-transaction-numbers-are-only-allowed-on-a-replica-set-member-or-mongos-4083
+
+### Swagger
+
+Se encuentra disponible en http://localhost:8000/api/documentation
+
+### Arrancar el servidor de desarrollo
+Se puede inicializar mediante el comando:
+
+```bash
+php artisan serve
+```
+
+Esto iniciará el servidor en http://localhost:8000 por defecto. Se le puede pasar un puerto específico.
+
+## Rutas de la API
+A continuación se describen las rutas básicas de la API de Feeds:
+
+- GET /api/feeds: Obtener todos los artículos.
+- POST /api/feeds: Crear un nuevo artículos.
+- GET /api/feeds/{id}: Obtener un artículos específico por ID.
+- PUT /api/feeds/{id}: Actualizar un artículos existente.
+- DELETE /api/feeds/{id}: Eliminar un artículos por ID.
+
+Notas adicionales
+Si tienes alguna pregunta o necesitas ayuda, por favor abre un Issue en el repositorio o contacta al mantenedor.
+
+## Ejecutar scrapers
+
+La aplicación cuenta con un comando automatizado para realizar los scrapings:
+
+```bash
+php artisan app:scraping-command
+```
+
+## Arquitectura
+
+Se cuenta con un controlador principal: FeedController que contiene toda la lógica de los endpoints creados. Estos siguen la arquitectura básica de un CRUD de Laravel para generar un 'ApiResource'. Anteriormente ya se han listado dichos endpoints. Dentro de dicho controlador se ha aplicado el patrón repositorio para extraer la lógica de Eloquent a un repositorio donde es mucho más mantenible y substituible en caso de ser necesario.
+
+Por otra parte se cuenta con command para lanzar los scrapers que ya se ha listado anteriormente. Este command lanza los servicios encargados de scrapear las dos páginas web requeridas. Como se ha comentado, la logica de cada scrapeo se ha abstraído a un servicio con el que poder reutilizar y mantener de mejor forma dicha lógica. Para su lanzamiento se ha empleado el command de Laravel, pero se podrían llamar simplemente en un endpoint y convertirlo en una especie de webhook. En los scrapers se ha aprovechado el FeedRepository nombrado anteriormente para almacenar los artículos.
+
+Para implementar MongoDB se ha usado la implementación oficial de Laravel. Eloquent es compatible con dicha base de datos. Hay algunas consideraciones a tener en cuenta que se han comentado antes como el tema de las transacciones para poder lanzar los tests de forma correcta.
+
+En `/public/images/arquitectura.png` se puede ver un diagrama de la arquitectura de la API con MongoDB.
