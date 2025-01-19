@@ -16,11 +16,16 @@ class ElPaisScraper
 
     public function fetchNews(): void
     {
-        $response = Http::withOptions([
-            'verify' => false, // Ignorar la verificación SSL
-        ])->get('https://elpais.com/');
+        try {
+            $response = Http::withOptions([
+                'verify' => false, // Ignorar la verificación SSL
+            ])->get('https://elpais.com/');
 
-        $crawler = new Crawler($response->body());
+            $crawler = new Crawler($response->body());
+        } catch (\Throwable $th) {
+            return;
+        }
+
 
         //Get articles list
         $news = $crawler->filter('article')->each(function (Crawler $node) {
@@ -33,19 +38,27 @@ class ElPaisScraper
 
         // Get the first 5 articles content
         for ($i=0; $i < 5; $i++) {
-            $this->feedRepository->store($this->fetchArticle($news[$i]['url']));
+            $scrapedContent = $this->fetchArticle($news[$i]['url']);
+
+            if ($scrapedContent) {
+                $this->feedRepository->store($scrapedContent);
+            }
         }
 
         return;
     }
 
-    private function fetchArticle(string $url):array
+    private function fetchArticle(string $url):array|null
     {
-        $response = Http::withOptions([
-            'verify' => false, // Ignorar la verificación SSL
-        ])->get($url);
+        try {
+            $response = Http::withOptions([
+                'verify' => false, // Ignorar la verificación SSL
+            ])->get($url);
 
-        $crawler = new Crawler($response->body());
+            $crawler = new Crawler($response->body());
+        } catch (\Throwable $th) {
+            return null;
+        }
 
         $title = $crawler->filter('h1.a_t')->text('', true);
         $source = "elpais";
