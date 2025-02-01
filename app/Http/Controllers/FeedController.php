@@ -85,6 +85,12 @@ class FeedController extends Controller
 
         $feed = $this->feedRepository->store($validation);
 
+        if ($feed === null) {
+            return response()->json([
+                'message' => 'Article not created. Check the input',
+            ], 400);
+        }
+
         return response()->json([
             'message' => 'Article created',
             'data' => $feed,
@@ -188,6 +194,12 @@ class FeedController extends Controller
         ]);
 
         $updatedFeed = $this->feedRepository->update($feed, $validation);
+
+        if ($updatedFeed === null) {
+            return response()->json([
+                'message' => 'Article not updated. Check the input',
+            ], 400);
+        }
 
         return response()->json([
             'message' => 'Article updated',
