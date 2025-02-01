@@ -18,11 +18,21 @@ class FeedRepository
 
     public function store(array $data)
     {
+        //Validation
+        if (strlen($data['title']) < 3 || strlen($data['content']) < 10) {
+            return null;
+        }
+
         return Feed::create($data);
     }
 
     public function update(Feed $feed, array $data)
     {
+        //Validation
+        if (strlen($data['title']) < 3 || strlen($data['content']) < 10) {
+            return null;
+        }
+
         $feed->update($data);
         return $feed;
     }
