@@ -4,6 +4,7 @@ namespace App\Services\Scraping;
 use App\Repositories\FeedRepository;
 use App\Services\HttpClient\HttpClientInterface;
 use App\Services\HtmlParser\HtmlParserInterface;
+use App\Services\Sanitizer\ScrapingSanitizer;
 
 class ElMundoScraper
 {
@@ -55,9 +56,9 @@ class ElMundoScraper
             return null;
         }
 
-        $title = $crawler->filter('h1.ue-c-article__headline')->text('', true);
+        $title = ScrapingSanitizer::sanitizeText($crawler->filter('h1.ue-c-article__headline')->text('', true));
         $source = "elmundo";
-        $content = $crawler->filter('div.ue-c-article__body')->text('', true);
+        $content = ScrapingSanitizer::sanitizeText($crawler->filter('div.ue-c-article__body')->text('', true));
 
         return [
             'title' => $title,

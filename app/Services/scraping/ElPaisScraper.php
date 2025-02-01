@@ -4,6 +4,7 @@ namespace App\Services\scraping;
 use App\Repositories\FeedRepository;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
+use App\Services\Sanitizer\ScrapingSanitizer;
 
 class ElPaisScraper
 {
@@ -60,9 +61,9 @@ class ElPaisScraper
             return null;
         }
 
-        $title = $crawler->filter('h1.a_t')->text('', true);
+        $title = ScrapingSanitizer::sanitizeText($crawler->filter('h1.a_t')->text('', true));
         $source = "elpais";
-        $content = $crawler->filter('div[data-dtm-region="articulo_cuerpo"]')->text('', true);
+        $content = ScrapingSanitizer::sanitizeText($crawler->filter('div[data-dtm-region="articulo_cuerpo"]')->text('', true));
 
         return [
             'title' => $title,
