@@ -78,8 +78,8 @@ class FeedController extends Controller
     public function store(Request $request)
     {
         $validation = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
+            'title' => 'required|string|max:255|min:3',
+            'content' => 'required|string|min:10',
             'source' => 'required|string|in:ElPais,ElMundo,Manual',
         ]);
 
@@ -182,8 +182,8 @@ class FeedController extends Controller
         }
 
         $validation = $request->validate([
-            'title' => 'string|max:255',
-            'content' => 'string',
+            'title' => 'string|max:255|min:3',
+            'content' => 'string|min:10',
             'source' => 'string',
         ]);
 
